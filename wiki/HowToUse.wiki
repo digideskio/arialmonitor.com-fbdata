@@ -2,7 +2,7 @@
 =The Javascript File=
 
   * Download the Javascript file from the source section of this website.
-  * Add that Javascript file to your website, preferable in the head.
+  * Add that Javascript file to your website, preferably in the head.
 
 =Creating a New Notifier=
 
