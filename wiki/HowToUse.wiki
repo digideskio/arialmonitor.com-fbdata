@@ -62,9 +62,9 @@ Info: This decides where on the screen the notifier shows up. The notifier slide
 
 Format: Integer
 
-Default: 10000
+Default: 31000
 
-Info: How often in milliseconds you would like to hit the ScribbleLive API to check for newly opened events.
+Info: How often in milliseconds you would like to hit the ScribbleLive API to check for newly opened events. The response is cached for 30000 ms by most browsers.
 
 *ShowCloseButton*
 
