@@ -1,37 +1,46 @@
 ﻿function HomePageNotifier(Options) {
 
+	// Set the default options.
     this.Options = {
         APIToken: "",
         WebsiteId: 0,
 		TimeToStayOpen: 10000,
 		Position: "TopRight",
-		HowOftenToCheck: 10000,
+		HowOftenToCheck: 31000,
 		ShowCloseButton: true,
 		LinkText: "<strong>[[EventTitle]]</strong> is starting now. Click here to watch live."
     };
 
+	// Overwrite the default options with any options passed in.
     for (opt in Options) {
         this.Options[opt] = Options[opt];
     }
 	
+	// Set the last time to the current time the first time we check for newly started events.
 	this.LastTime = this.FormatDateUTC(new Date());
 
+	// Set the instance of this notifier.
 	this.InstanceIndex = HomePageNotifier.StoreInstance(this);
 
+	// Set up the queue.
 	this.NotifierQueue = new Array();
 
+	// Check if jQuery is available.
     this.IsjQueryAvailable = this.TestForjQuery();
 
+	// Add jQuery if it's not already on the page.
     if (!this.IsjQueryAvailable) {
         this.AddjQuery();
     }
 
+	// Make the initial API call for all events.
     this.GetAllEvents();
 
 }
 
 HomePageNotifier.Index = 0;
 
+// Get the instance of the notifier.
 HomePageNotifier.GetInstance = function (pIndex) {
     if (HomePageNotifier.__instances == null) {
         return null;
@@ -39,24 +48,21 @@ HomePageNotifier.GetInstance = function (pIndex) {
     else {
         return HomePageNotifier.__instances["" + pIndex];
     }
-
 }
 
+// Set the instance of the notifier.
 HomePageNotifier.StoreInstance = function (pHomePageNotifierInstance) {
     if (HomePageNotifier.__instances == null) {
         HomePageNotifier.__instances = new Array();
     }
-
     var _Index = HomePageNotifier.Index;
     HomePageNotifier.Index++;
-
     HomePageNotifier.__instances[_Index] = pHomePageNotifierInstance;
-
     return _Index;
 }
 
+// Check the API response for any events that have started since the last time you checked. Create the notifier if you find one.
 HomePageNotifier.prototype.AnalyzeEvents = function (pResponse) {
-
     for (var i = 0; i < pResponse.Events.length; i++) {
         var EventStartTime = this.FormatDateUTC(eval("new " + (pResponse.Events[i].Start.replace(/\//g, ""))));
         if ((pResponse.Events[i].IsLive == 1) && (EventStartTime > this.LastTime)) {
@@ -75,9 +81,9 @@ HomePageNotifier.prototype.AnalyzeEvents = function (pResponse) {
     }
 
     var Wait = setTimeout("HomePageNotifier.GetInstance(" + this.InstanceIndex + ").GetAllEvents()", CheckInterval);
-
 }
 
+// Create the notifier div, add the text, and add it to the queue.
 HomePageNotifier.prototype.ConstructNotifier = function (pEvent) {
 
     var Notifier = document.createElement("div");
@@ -104,6 +110,7 @@ HomePageNotifier.prototype.ConstructNotifier = function (pEvent) {
 
 }
 
+//Figure out if there is a notifier already on the page.
 HomePageNotifier.prototype.DetectNotifier = function () {
     var NotifierFound = false;
 	var divs = document.getElementsByTagName("div");
@@ -115,6 +122,7 @@ HomePageNotifier.prototype.DetectNotifier = function () {
 	return NotifierFound;
 }
 
+// Check the queue and slide in the next notification in the queue.
 HomePageNotifier.prototype.CheckQueue = function () {
     if (this.NotifierQueue.length > 0) {
         this.SlideIn(this.NotifierQueue[0]);
@@ -122,6 +130,7 @@ HomePageNotifier.prototype.CheckQueue = function () {
     }
 }
 
+// Get the event's white label url.
 HomePageNotifier.prototype.GetEventUrl = function (pEvent) {
 	for (i=0; i<pEvent.Websites.length; i++) {
 		if (pEvent.Websites[i].Id == this.Options.WebsiteId) {
@@ -135,6 +144,7 @@ HomePageNotifier.prototype.FormatDateUTC = function (pDate) {
 	return FormattedDate;
 }
 
+// Slide the notifier on to the page. Includes the styles for all of the different position possibilities.
 HomePageNotifier.prototype.SlideIn = function (pElement) {
     if (document.getElementById(pElement.id) == null) {
         pElement.style.visibility = "hidden";
@@ -162,6 +172,7 @@ HomePageNotifier.prototype.SlideIn = function (pElement) {
     }
 }
 
+// Slide the notifier off of the page.
 HomePageNotifier.prototype.SlideOut = function (pElementId) {
     var T = this;
     var SlideOutWait = setTimeout(function () {
@@ -173,12 +184,14 @@ HomePageNotifier.prototype.SlideOut = function (pElementId) {
     }, this.Options.TimeToStayOpen);
 }
 
+// Close the notifier when the close button is clicked. Check the queue for more notices to show.
 HomePageNotifier.prototype.CloseNotifier = function (pElementId) {
     var NotifierToRemove = document.getElementById(pElementId);
     NotifierToRemove.parentNode.removeChild(NotifierToRemove);
     this.CheckQueue();
 }
 
+// A test to determine if jQuery is on the page.
 HomePageNotifier.prototype.TestForjQuery = function () {
     if (this.IsjQueryAvailable != null) {
         return this.IsjQueryAvailable;
@@ -192,17 +205,16 @@ HomePageNotifier.prototype.TestForjQuery = function () {
     }
 }
 
+// Add jquery to the head of the page.
 HomePageNotifier.prototype.AddjQuery = function () {
-	
 	var jQuery = document.createElement("script");
     jQuery.type = "text/javascript";
     jQuery.src = "http://embed.scribblelive.com/js/jquery.js";
     document.getElementsByTagName("head")[0].appendChild(jQuery);
-	
 }
 
+// Remove any old API calling scripts, and add a new one.
 HomePageNotifier.prototype.GetAllEvents = function () {	
-	
 	var Scripts = document.head.getElementsByTagName("script");
     for (var i = 0; i < Scripts.length; i++) {
         ScriptSource = Scripts[i].src;
@@ -210,10 +222,8 @@ HomePageNotifier.prototype.GetAllEvents = function () {
             document.head.removeChild(Scripts[i]);
         }
     }
-	
 	var LoadPostsCall = document.createElement("script");
     LoadPostsCall.type = "text/javascript";
     LoadPostsCall.src = "http://apiv1.scribblelive.com/website/" + this.Options.WebsiteId + "/events/?Token=" + this.Options.APIToken + "&format=json&callback=HomePageNotifier.GetInstance(" + this.InstanceIndex + ").AnalyzeEvents";
     document.getElementsByTagName("head")[0].appendChild(LoadPostsCall);	
-	
 }
