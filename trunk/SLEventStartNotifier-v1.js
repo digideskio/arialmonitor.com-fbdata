@@ -209,7 +209,7 @@ HomePageNotifier.prototype.TestForjQuery = function () {
 HomePageNotifier.prototype.AddjQuery = function () {
 	var jQuery = document.createElement("script");
     jQuery.type = "text/javascript";
-    jQuery.src = "http://embed.scribblelive.com/js/jquery.js";
+    jQuery.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js";
     document.getElementsByTagName("head")[0].appendChild(jQuery);
 }
 
