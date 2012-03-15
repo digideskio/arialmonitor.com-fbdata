@@ -1,0 +1,48 @@
+<html>
+<head>
+    <title>ScribbleLive Event Start Notifier</title>
+    <script type="text/javascript" src="SLEventStartNotifierv1.js"></script>
+    <style type="text/css">
+	div.Notifier {
+	        background: #fff;
+	        -webkit-box-shadow: 0 0 5px #888;
+	        -moz-box-shadow: 0 0 5px #888;
+	        width: 300px;
+	}
+	div.Notifier a {
+	        text-decoration: none;
+	        color: #555;
+	        padding: 10px;
+	        display: block;
+	}
+	div.Notifier a:hover {
+	        text-decoration: underline;
+	        color: #000;
+	}
+	div.Notifier a.CloseNotifier {
+	        font-size: 10px;
+	        position: absolute;
+	        top: 0;
+	        right: 0;
+	        padding: 2px 4px 2px 2px;
+	}
+	</style>
+</head>
+<body>
+
+<h1>ScribbleLive Event Start Notifier</h1>
+
+<script type="text/javascript">
+    var First = new HomePageNotifier({
+        APIToken: YourAPIToken,
+        WebsiteId: YourWebsiteId,
+        TimeToStayOpen: 10000,
+        Position: "TopRight",
+        HowOftenToCheck: 60000,
+        ShowCloseButton: true,
+        LinkText: "[[EventTitle]] is starting now, it's called <strong>[[EventTitle]]</strong>."
+    });
+</script>
+
+</body>
+</html>
