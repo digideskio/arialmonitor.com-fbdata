@@ -18,7 +18,9 @@
 
         // Overwrite the default options with any options passed in.
         for (var opt in Options) {
-            this.Options[opt] = Options[opt];
+            if (Options.hasOwnProperty(opt)) {
+            	this.Options[opt] = Options[opt];
+            }
         }
         
         // Set the last time to the current time the first time we check for newly started events.
@@ -28,7 +30,7 @@
         this.InstanceIndex = HomePageNotifier.StoreInstance(this);
 
         // Set up the queue.
-        this.NotifierQueue = new Array();
+        this.NotifierQueue = [];
 
         // Check if jQuery is available.
         this.IsjQueryAvailable = this.TestForjQuery();
@@ -41,13 +43,13 @@
         // Make the initial API call for all events.
         this.GetAllEvents();
 
-    };
+    }
 
     HomePageNotifier.Index = 0;
 
     // Get the instance of the notifier.
     HomePageNotifier.GetInstance = function (pIndex) {
-        if (HomePageNotifier.__instances == null) {
+        if (HomePageNotifier.__instances === undefined) {
             return null;
         }
         else {
@@ -57,8 +59,8 @@
 
     // Set the instance of the notifier.
     HomePageNotifier.StoreInstance = function (pHomePageNotifierInstance) {
-        if (HomePageNotifier.__instances == null) {
-            HomePageNotifier.__instances = new Array();
+        if (HomePageNotifier.__instances === undefined) {
+            HomePageNotifier.__instances = [];
         }
         var _Index = HomePageNotifier.Index;
         HomePageNotifier.Index++;
@@ -70,13 +72,13 @@
     HomePageNotifier.prototype.AnalyzeEvents = function (pResponse) {
         for (var i = 0; i < pResponse.Events.length; i++) {
             var EventStartTime = this.FormatDateUTC(eval("new " + (pResponse.Events[i].Start.replace(/\//g, ""))));
-            if ((pResponse.Events[i].IsLive == 1) && (EventStartTime > this.LastTime)) {
+            if ((pResponse.Events[i].IsLive === 1) && (EventStartTime > this.LastTime)) {
                 this.ConstructNotifier(pResponse.Events[i]);
                 this.LastTime = this.FormatDateUTC(new Date());
             }
         }
 
-        if (this.DetectNotifier() == false) {
+        if (this.DetectNotifier() === false) {
             this.CheckQueue();
         }
 
@@ -108,9 +110,9 @@
         CloseLink.href = "#";
         CloseLink.className = "CloseNotifier";
         CloseLink.innerHTML = "x";
-        CloseLink.setAttribute("onclick", "HomePageNotifier.GetInstance(" + this.InstanceIndex + ").CloseNotifier(" + pEvent.Id + "); return false;");
+        CloseLink.setAttribute("onclick", "scribbleLive.HomePageNotifier.GetInstance(" + this.InstanceIndex + ").CloseNotifier(" + pEvent.Id + "); return false;");
 
-        if (this.Options.ShowCloseButton == true) {
+        if (this.Options.ShowCloseButton === true) {
             Notifier.appendChild(CloseLink);
         }
 
@@ -122,8 +124,8 @@
     HomePageNotifier.prototype.DetectNotifier = function () {
         var NotifierFound = false;
         var divs = document.getElementsByTagName("div");
-        for (i = 0; i < divs.length; i++) {
-            if (divs[i].className == "Notifier") {
+        for (var i = 0; i < divs.length; i++) {
+            if (divs[i].className === "Notifier") {
                 NotifierFound = true;
             }
         }
@@ -140,8 +142,8 @@
 
     // Get the event's white label url.
     HomePageNotifier.prototype.GetEventUrl = function (pEvent) {
-        for (i=0; i<pEvent.Websites.length; i++) {
-            if (pEvent.Websites[i].Id == this.Options.WebsiteId) {
+        for (var i = 0; i < pEvent.Websites.length; i++) {
+            if (pEvent.Websites[i].Id === this.Options.WebsiteId) {
                 return pEvent.Websites[i].Url;  
             }
         }   
@@ -154,19 +156,19 @@
 
     // Slide the notifier on to the page. Includes the styles for all of the different position possibilities.
     HomePageNotifier.prototype.SlideIn = function (pElement) {
-        if (document.getElementById(pElement.id) == null) {
+        if (document.getElementById(pElement.id) === null) {
             pElement.style.visibility = "hidden";
             pElement.style.position = "absolute";
-            if (this.Options.Position == "TopRight") {
+            if (this.Options.Position === "TopRight") {
                 pElement.style.top = "0";
                 pElement.style.right = "20px";
-            } else if (this.Options.Position == "TopLeft") {
+            } else if (this.Options.Position === "TopLeft") {
                 pElement.style.top = "0";
                 pElement.style.left = "20px";
-            } else if (this.Options.Position == "BottomLeft") {
+            } else if (this.Options.Position === "BottomLeft") {
                 pElement.style.bottom = "0";
                 pElement.style.left = "20px";
-            } else if (this.Options.Position == "BottomRight") {
+            } else if (this.Options.Position === "BottomRight") {
                 pElement.style.bottom = "0";
                 pElement.style.right = "20px";
             }
@@ -201,12 +203,12 @@
 
     // A test to determine if jQuery is on the page.
     HomePageNotifier.prototype.TestForjQuery = function () {
-        if (this.IsjQueryAvailable != null) {
+        if (this.IsjQueryAvailable !== null) {
             return this.IsjQueryAvailable;
         } else {
             this.IsjQueryAvailable = false;
             try {
-                this.IsjQueryAvailable = (jQuery != null);
+                this.IsjQueryAvailable = (jQuery !== null);
             }
             catch (Error) { }
             return this.IsjQueryAvailable;
@@ -226,7 +228,7 @@
         var Scripts = document.head.getElementsByTagName("script");
         for (var i = 0; i < Scripts.length; i++) {
             var ScriptSource = Scripts[i].src;
-            if (ScriptSource.match("^\http:\/\/apiv1\.scribblelive\.com/website/" + this.Options.WebsiteId + ".*") != null) {
+            if (ScriptSource.match("^\http:\/\/apiv1\.scribblelive\.com/website/" + this.Options.WebsiteId + ".*") !== null) {
                 document.head.removeChild(Scripts[i]);
             }
         }
