@@ -8,38 +8,15 @@
 	        -webkit-box-shadow: 0 0 5px #888;
 	        -moz-box-shadow: 0 0 5px #888;
 	        width: 300px;
-
-            background-image: linear-gradient(top, rgb(249,249,249), rgb(221,221,221));
-            background-image: -o-linear-gradient(top, rgb(249,249,249), rgb(221,221,221));
-            background-image: -moz-linear-gradient(top, rgb(249,249,249), rgb(221,221,221));
-            background-image: -webkit-linear-gradient(top, rgb(249,249,249), rgb(221,221,221));
-            background-image: -ms-linear-gradient(top, rgb(249,249,249), rgb(221,221,221));
-            background-image: -webkit-gradient(
-                linear,
-                left top,
-                left bottom,
-                color-stop(0, rgb(249,249,249)),
-                color-stop(1, rgb(221,221,221))
-            );
-
-            -webkit-box-shadow: 0 0 8px rgba( 0, 0, 0, 0.3 );
-            box-shadow: 0 0 8px rgba( 0, 0, 0, 0.3 );
-            text-shadow: 0 1px 0 rgba( 255, 255, 255, 0.7 );
-            border-radius: 0 0 2px 2px;
-            font-size: 85%;
-            border: 1px solid #ccc;
-            margin-top: -1px;
 	}
 	div.Notifier a {
 	        text-decoration: none;
 	        color: #555;
 	        padding: 10px;
 	        display: block;
-
-            color: #999;
 	}
 	div.Notifier a:hover {
-	        /*text-decoration: underline;*/
+	        text-decoration: underline;
 	        color: #000;
 	}
 	div.Notifier a.CloseNotifier {
@@ -57,13 +34,13 @@
 
 <script type="text/javascript">
     var First = new scribbleLive.HomePageNotifier({
-        APIToken: "",
-        WebsiteId: 0,
-        TimeToStayOpen: 1000000,
+        APIToken: 'YOUR_API_TOKEN',
+        WebsiteId: YOUR_WEBSITE_ID,
+        TimeToStayOpen: 60000,
         Position: "TopRight",
-        HowOftenToCheck: 5000,
+        HowOftenToCheck: 10000,
         ShowCloseButton: true,
-        LinkText: "[[EventTitle]] is starting now, it's called <strong>[[EventTitle]]</strong>."
+        LinkText: "<strong>[[EventTitle]]</strong> is starting now. Click here to watch live."
     });
 </script>
 
