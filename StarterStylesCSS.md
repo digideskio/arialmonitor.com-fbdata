@@ -1,0 +1,31 @@
+# CSS #
+
+Here are a few basic styles to get you started.
+
+```
+<style type="text/css">
+div.Notifier {
+	background: #fff;
+	-webkit-box-shadow: 0 0 5px #888;
+	-moz-box-shadow: 0 0 5px #888;
+	width: 300px;
+}
+div.Notifier a {
+	text-decoration: none;
+	color: #555;
+	padding: 10px;
+	display: block;
+}
+div.Notifier a:hover {
+	text-decoration: underline;
+	color: #000;
+}
+div.Notifier a.CloseNotifier {
+	font-size: 10px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 2px 4px 2px 2px;
+}
+</style>
+```
